@@ -25,9 +25,6 @@ namespace WeatherApp.ViewModels
         public Hour currentForecastList = new();
 
         [ObservableProperty]
-        bool isRefreshing;
-
-        [ObservableProperty]
         bool isFirstTime = true;
 
         

@@ -9,6 +9,9 @@
         [ObservableProperty]
         string title;
 
+        [ObservableProperty]
+        bool isRefreshing;
+
         public bool IsNotBusy => !IsBusy;
 
     }
