@@ -30,7 +30,8 @@
                             Margin="0,30,0,0"
                             Padding="10"
                             FontAttributes="Bold"
-                            FontSize="Title"
+                            FontSize="30"
+                            FontAutoScalingEnabled="True"
                             HorizontalTextAlignment="Center"
                             Text="{Binding WeatherList.Location.Name}"
                             TextColor="{AppThemeBinding Dark=White,
@@ -40,7 +41,8 @@
                         <Label
                             Padding="10"
                             FontAttributes="Bold"
-                            FontSize="Subtitle"
+                            FontSize="Title"
+                            FontAutoScalingEnabled="True"
                             HorizontalTextAlignment="Center"
                             Text="{Binding CurrentForecastList.Condition.Text}"
                             TextColor="{AppThemeBinding Dark=White,
@@ -48,7 +50,7 @@
                             VerticalTextAlignment="Center" />
 
                         <Image
-                            Margin="0,40,0,30"
+                            Margin="0,50,0,50"
                             HeightRequest="150"
                             HorizontalOptions="Center"
                             Source="{Binding CurrentForecastList.Condition.NewIcon, StringFormat='{}https:{0}'}"

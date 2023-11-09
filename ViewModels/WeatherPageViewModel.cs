@@ -52,6 +52,7 @@ namespace WeatherApp.ViewModels
 
                 Double latitude;
                 Double longitude;
+                string query;
 
                 if (IsFirstTime == true)
                 {
@@ -64,6 +65,8 @@ namespace WeatherApp.ViewModels
 
                     latitude = location.Latitude;
                     longitude = location.Longitude;
+
+                    query = string.Format("{0},{1}",location.Latitude,location.Longitude);
                 }
                 else
                 {
@@ -74,10 +77,11 @@ namespace WeatherApp.ViewModels
                         });
                     latitude = location.Latitude;
                     longitude = location.Longitude;
+                    query = string.Format("{0},{1}", location.Latitude, location.Longitude);
                 }
 
                 //Get Api response.
-                dynamic result = await apiServices.GetWeatherBylocation(latitude, longitude);
+                dynamic result = await apiServices.GetWeatherBylocation(query);
                 WeatherList = result;
 
                 //Join Hours of 2 days from now.
