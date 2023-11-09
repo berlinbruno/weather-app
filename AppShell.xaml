@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="WeatherApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:view="clr-namespace:WeatherApp.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Dark=#001d3d, Light=#003566}"
+    Shell.TabBarIsVisible="True"
+    Shell.TabBarTitleColor="White"
+    Shell.TabBarUnselectedColor="#adb5bd">
+
+    <TabBar>
+        <Tab Title="Home" Icon="home">
+            <ShellContent ContentTemplate="{DataTemplate view:WeatherPage}" Route="WeatherPage" />
+        </Tab>
+        <Tab Title="Favorite" Icon="star">
+            <ShellContent ContentTemplate="{DataTemplate view:FavoritesPage}" />
+        </Tab>
+    </TabBar>
+</Shell>
