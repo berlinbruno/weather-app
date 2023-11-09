@@ -34,6 +34,9 @@ namespace WeatherApp.Models
         [JsonProperty("temp_f")]
         public double TempF { get; set; }
 
+        [JsonProperty("condition")]
+        public Condition Condition { get; set; }
+
         [JsonProperty("wind_mph")]
         public double WindMph { get; set; }
 

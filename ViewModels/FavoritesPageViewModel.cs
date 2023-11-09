@@ -1,35 +1,146 @@
-﻿namespace WeatherApp.ViewModels
+﻿using System.Globalization;
+
+namespace WeatherApp.ViewModels
 {
     public partial class FavoritesPageViewModel : BaseViewModel
     {
-        public FavoritesPageViewModel()
+        IConnectivity connectivity;
+        ApiServices apiServices;
+
+
+        public FavoritesPageViewModel(ApiServices apiServices, IConnectivity connectivity)
         {
-            Items = new ObservableCollection<string>();
+            this.apiServices = apiServices;
+            this.connectivity = connectivity;
         }
 
         [ObservableProperty]
-        ObservableCollection<string> items;
+        public List<Hour> forecastList = new();
 
         [ObservableProperty]
-        string text;
+        public Hour currentForecastList = new();
+
+        [ObservableProperty]
+        string items;
+
+
+        [ObservableProperty]
+        string query;
+
+        [ObservableProperty]
+        public WeatherModel favoriteList = new();
+
 
         [RelayCommand]
-        void Add()
+        async Task Add()
         {
-            if (string.IsNullOrWhiteSpace(Text))
+
+            if (IsBusy)
                 return;
-            Items.Add(Text);
-            Text = String.Empty;
+
+            try
+            {
+
+                IsBusy = true;
+                IsRefreshing = true;
+
+                //Check network connection.
+                if (connectivity.NetworkAccess != NetworkAccess.Internet)
+                    return;
+
+                Debug.WriteLine("a");
+
+                if (Query == null)
+                    return;
+
+               
+                    Debug.WriteLine("a1");
+                    Preferences.Clear("query");
+                    Debug.WriteLine("a2");
+                    Preferences.Set("query", Query);
+                    Items = Preferences.Get("query", null);
+             
+
+                Debug.WriteLine("b");
+
+                Query = String.Empty;
+
+                //Get Api response.
+                dynamic result = await apiServices.GetWeatherBylocation(Items);
+                FavoriteList = result;
+                Debug.WriteLine("c");
+
+                //Join Hours of 2 days from now.
+                var weatherForecastHours = new List<Hour>(FavoriteList.Forecast.Forecastday[0].Hour);
+                weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
+
+                //Find index of next Hour.
+                int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
+
+                //Get next 24 Hours from now.
+                ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
+
+                CurrentForecastList = weatherForecastHours[nextIndexHour];
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                IsRefreshing = false;
+            }
+
         }
 
         [RelayCommand]
-        void Remove(string s)
+        async Task Refresh()
         {
-            if (Items.Contains(s))
+            if (IsBusy)
+                return;
+
+            try
             {
-                Items.Remove(s);
+                Items = Preferences.Get("query", null);
+
+                if (Items == null)
+                    return;
+
+                Query = String.Empty;
+
+                //Get Api response.
+                dynamic result = await apiServices.GetWeatherBylocation(Items);
+                FavoriteList = result;
+
+                //Join Hours of 2 days from now.
+                var weatherForecastHours = new List<Hour>(FavoriteList.Forecast.Forecastday[0].Hour);
+                weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
+
+                //Find index of next Hour.
+                int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
+
+                //Get next 24 Hours from now.
+                ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
+
+                CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                IsRefreshing = false;
             }
         }
+
     }
 }
+
+        
 

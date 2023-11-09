@@ -26,21 +26,25 @@
                                                  Light=#003566}" />
                     <VerticalStackLayout Grid.Row="0">
 
+
                         <Label
                             Margin="0,30,0,0"
                             Padding="10"
                             FontAttributes="Bold"
-                            FontSize="Title"
+                            FontAutoScalingEnabled="True"
+                            FontSize="30"
                             HorizontalTextAlignment="Center"
                             Text="{Binding WeatherList.Location.Name}"
                             TextColor="{AppThemeBinding Dark=White,
                                                         Light=White}"
                             VerticalTextAlignment="Center" />
 
+
                         <Label
                             Padding="10"
                             FontAttributes="Bold"
-                            FontSize="Subtitle"
+                            FontAutoScalingEnabled="True"
+                            FontSize="20"
                             HorizontalTextAlignment="Center"
                             Text="{Binding CurrentForecastList.Condition.Text}"
                             TextColor="{AppThemeBinding Dark=White,
@@ -48,13 +52,12 @@
                             VerticalTextAlignment="Center" />
 
                         <Image
-                            Margin="0,40,0,30"
+                            Margin="0,60,0,20"
                             HeightRequest="150"
                             HorizontalOptions="Center"
                             Source="{Binding CurrentForecastList.Condition.NewIcon, StringFormat='{}https:{0}'}"
                             VerticalOptions="Center"
                             WidthRequest="200" />
-
 
                         <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*">
 

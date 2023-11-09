@@ -1,51 +1,366 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodel="clr-namespace:WeatherApp.ViewModels"
-             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-             x:DataType="viewmodel:FavoritesPageViewModel"
-             x:Class="WeatherApp.Views.FavoritesPage">
-    
-            <VerticalStackLayout Margin="10" HorizontalOptions="Center" Spacing="10">
-                <Frame>
-                    <HorizontalStackLayout HorizontalOptions="CenterAndExpand" 
-                                                   Spacing="30">
-                        <Entry x:Name="countryEntry" Placeholder="Enter the Location"  PlaceholderColor="Black"
-                                       WidthRequest="200" Text="{Binding Text}"  />
-                        <Button x:Name="add_btn" Text="Add" WidthRequest="100"
-                                        Command="{Binding AddCommand}"/>
+<ContentPage
+    x:Class="WeatherApp.Views.FavoritesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:model="clr-namespace:WeatherApp.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodel="clr-namespace:WeatherApp.ViewModels"
+    x:DataType="viewmodel:FavoritesPageViewModel">
 
-                    </HorizontalStackLayout>
-                </Frame>
+    <RefreshView
+        Command="{Binding RefreshCommand}"
+        IsRefreshing="{Binding IsRefreshing}"
+        RefreshColor="#6100ff">
 
-            <CollectionView x:Name="collcn" ItemsSource="{Binding Items}">
+        <ScrollView BackgroundColor="{AppThemeBinding Dark=Black, Light=GhostWhite}" VerticalOptions="Center">
+            <VerticalStackLayout>
+                <Grid RowDefinitions="Auto,Auto">
+                    <Path
+                        Grid.Row="0"
+                        Data="m0,0.00001l415.00001,0l0,161.64724c-207.50001,0 -207.50001,61.59057 -415.00001,26.59593l0,-188.24318l0,0.00001z"
+                        Fill="{AppThemeBinding Dark=#001d3d,
+                                               Light=#003566}"
+                        Stroke="{AppThemeBinding Dark=#001d3d,
+                                                 Light=#003566}" />
 
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
-                </CollectionView.ItemsLayout>
+                    <VerticalStackLayout Grid.Row="0">
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type x:String}">
-                        <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem IconImageSource="trash"
-                                           BackgroundColor="Red"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FavoritesPageViewModel}}, Path=RemoveCommand}"
-                                           CommandParameter="{Binding .}"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <VerticalStackLayout>
-                                <Frame CornerRadius="0">
-                                    <Label Text="{Binding .}"
-                                               FontSize="18" HeightRequest="70" VerticalTextAlignment="Center" 
-                                               HorizontalTextAlignment="Center" />
+                        <Label
+                            Margin="0,10,0,0"
+                            Padding="10"
+                            FontAttributes="Bold"
+                            FontAutoScalingEnabled="True"
+                            FontSize="30"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding FavoriteList.Location.Name}"
+                            TextColor="{AppThemeBinding Dark=White,
+                                                        Light=White}"
+                            VerticalTextAlignment="Center" />
+
+                        <Label
+                            Padding="10"
+                            FontAttributes="Bold"
+                            FontAutoScalingEnabled="True"
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding CurrentForecastList.Condition.Text}"
+                            TextColor="{AppThemeBinding Dark=White,
+                                                        Light=GhostWhite}"
+                            VerticalTextAlignment="Center" />
+
+                        <Image
+                            Margin="0,60,0,0"
+                            Aspect="AspectFill"
+                            HeightRequest="150"
+                            HorizontalOptions="Center"
+                            Source="{Binding CurrentForecastList.Condition.NewIcon, StringFormat='{}https:{0}'}"
+                            VerticalOptions="Center"
+                            WidthRequest="150" />
+
+                        <Grid Margin="10,0,10,0" ColumnDefinitions="*,*,*,*,*">
+                            <Entry
+                                Grid.ColumnSpan="4"
+                                FontSize="Medium"
+                                HorizontalTextAlignment="Start"
+                                Placeholder="Enter The City"
+                                PlaceholderColor="{AppThemeBinding Dark=White,
+                                                                   Light=Grey}"
+                                Text="{Binding Query}"/>
+
+
+                            <Button
+                                Grid.Column="5"
+                                Margin="0"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding AddCommand}"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalOptions="Center"
+                                Text="Add"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Grey}"
+                                VerticalOptions="Center" />
+
+                        </Grid>
+
+
+
+                        <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*">
+
+                            <Image
+                                HeightRequest="40"
+                                Source="wind"
+                                WidthRequest="35">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                </Image.Behaviors>
+                            </Image>
+
+                            <Image
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                HeightRequest="35"
+                                Source="humidity"
+                                WidthRequest="40">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                </Image.Behaviors>
+                            </Image>
+
+                            <Label
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Margin="5"
+                                FontAttributes="Bold"
+                                FontSize="50"
+                                HorizontalOptions="Center"
+                                Text="{Binding FavoriteList.Current.TempC, StringFormat='{}{0}℃'}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Grid.Row="1"
+                                Margin="5"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding FavoriteList.Current.WindKph, StringFormat='{}{0}Kph'}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalTextAlignment="Start" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Margin="5"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding FavoriteList.Current.Humidity, StringFormat='{}{0}%'}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalTextAlignment="Start" />
+
+                            <Image
+                                Grid.Row="2"
+                                Aspect="AspectFit"
+                                HeightRequest="35"
+                                Source="sunrise"
+                                WidthRequest="35">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                </Image.Behaviors>
+                            </Image>
+
+                            <Image
+                                Grid.Row="2"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Aspect="AspectFit"
+                                HeightRequest="50"
+                                HorizontalOptions="End"
+                                Source="{Binding CurrentForecastList.WillItRain, StringFormat='{}umbrella{0}'}"
+                                VerticalOptions="Center"
+                                WidthRequest="50">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                </Image.Behaviors>
+                            </Image>
+
+                            <Image
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Aspect="AspectFit"
+                                HeightRequest="35"
+                                Source="sunset"
+                                WidthRequest="35">
+                                <Image.Behaviors>
+                                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                </Image.Behaviors>
+                            </Image>
+
+                            <Label
+                                Grid.Row="3"
+                                Padding="10"
+                                FontAttributes="Bold"
+                                FontSize="Small"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding FavoriteList.Forecast.Forecastday[0].Astro.Sunrise}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalTextAlignment="Start" />
+
+                            <Label
+                                Grid.Row="2"
+                                Grid.RowSpan="2"
+                                Grid.Column="2"
+                                Padding="10"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding CurrentForecastList.ChanceOfRain, StringFormat='{}{0}%'}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalTextAlignment="Center" />
+
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="3"
+                                Padding="10"
+                                FontAttributes="Bold"
+                                FontSize="Small"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding FavoriteList.Forecast.Forecastday[0].Astro.Sunset}"
+                                TextColor="{AppThemeBinding Dark=White,
+                                                            Light=Black}"
+                                VerticalTextAlignment="Start" />
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <CollectionView
+                        Grid.Row="1"
+                        Margin="10,10,10,10"
+                        HeightRequest="150"
+                        ItemsSource="{Binding ForecastList}">
+
+                        <CollectionView.ItemsLayout>
+
+                            <LinearItemsLayout ItemSpacing="5" Orientation="Horizontal" />
+
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+
+                            <DataTemplate x:DataType="model:Hour">
+                                <Frame BackgroundColor="{AppThemeBinding Dark=#212529, Light=#edf2f4}" BorderColor="{AppThemeBinding Dark=#212529, Light=#adb5bd}">
+                                    <Grid
+                                        ColumnDefinitions="Auto,Auto,Auto"
+                                        ColumnSpacing="5"
+                                        HorizontalOptions="CenterAndExpand"
+                                        RowDefinitions="Auto,Auto,Auto,Auto"
+                                        RowSpacing="5"
+                                        VerticalOptions="CenterAndExpand">
+
+                                        <Image
+                                            Grid.ColumnSpan="3"
+                                            Aspect="AspectFill"
+                                            HeightRequest="40"
+                                            HorizontalOptions="Center"
+                                            Source="{Binding Condition.Icon, StringFormat='{}https:{0}'}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="40" />
+
+                                        <Image
+                                            Grid.Row="1"
+                                            Aspect="AspectFill"
+                                            HeightRequest="15"
+                                            HorizontalOptions="Center"
+                                            Source="temperature"
+                                            VerticalOptions="Center"
+                                            WidthRequest="15">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                            </Image.Behaviors>
+                                        </Image>
+
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Grid.ColumnSpan="2"
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            HorizontalOptions="Start"
+                                            Text="{Binding TemperatureC, StringFormat='{}{0}℃'}"
+                                            TextColor="{AppThemeBinding Dark=White,
+                                                                        Light=Black}"
+                                            VerticalOptions="Center" />
+
+                                        <Image
+                                            Grid.Row="2"
+                                            Aspect="AspectFit"
+                                            HeightRequest="15"
+                                            HorizontalOptions="Center"
+                                            Source="humidity"
+                                            VerticalOptions="Center"
+                                            WidthRequest="15">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                            </Image.Behaviors>
+                                        </Image>
+
+                                        <Label
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Grid.ColumnSpan="2"
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            HorizontalOptions="Start"
+                                            Text="{Binding Humidity, StringFormat='{}{0}%'}"
+                                            TextColor="{AppThemeBinding Dark=White,
+                                                                        Light=Black}"
+                                            VerticalOptions="Center" />
+
+                                        <Image
+                                            Grid.Row="3"
+                                            Aspect="AspectFit"
+                                            HeightRequest="15"
+                                            HorizontalOptions="Center"
+                                            Source="clock"
+                                            VerticalOptions="Center"
+                                            WidthRequest="15">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark=White, Light=Black}" />
+                                            </Image.Behaviors>
+                                        </Image>
+
+                                        <Label
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Grid.ColumnSpan="2"
+                                            FontAttributes="Bold"
+                                            FontSize="Small"
+                                            HorizontalOptions="Start"
+                                            Text="{Binding FormattedTime}"
+                                            TextColor="{AppThemeBinding Dark=White,
+                                                                        Light=Black}"
+                                            VerticalOptions="Center" />
+
+                                    </Grid>
                                 </Frame>
-                            </VerticalStackLayout>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-    </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
 </ContentPage>
+
+
+
+<!--<SwipeView>
+    <SwipeView.RightItems>
+        <SwipeItems>
+            <SwipeItem
+                BackgroundColor="Red"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FavoritesPageViewModel}}, Path=RemoveCommand}"
+                CommandParameter="{Binding .}"
+                IconImageSource="trash" />
+        </SwipeItems>
+    </SwipeView.RightItems>
+    <VerticalStackLayout>
+        <Frame CornerRadius="0">
+            <Label
+                FontSize="18"
+                HeightRequest="70"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Location.Name}"
+                VerticalTextAlignment="Center" />
+        </Frame>
+    </VerticalStackLayout>
+</SwipeView>-->

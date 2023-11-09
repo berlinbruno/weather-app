@@ -7,5 +7,6 @@ public partial class FavoritesPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = favoritesPageViewModel;
+		favoritesPageViewModel.RefreshCommand.Execute(this);
 	}
 }
