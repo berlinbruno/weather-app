@@ -13,7 +13,7 @@
     <RefreshView
         Command="{Binding GetWeatherCommand}"
         IsRefreshing="{Binding IsRefreshing}"
-        RefreshColor="#6100ff">
+        RefreshColor="#001d3d">
 
         <ScrollView BackgroundColor="{AppThemeBinding Dark=Black, Light=GhostWhite}" VerticalOptions="Center">
             <VerticalStackLayout>
