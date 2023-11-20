@@ -6,7 +6,16 @@
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            VersionTracking.Track();
+            if (VersionTracking.IsFirstLaunchEver == true)
+            {
+                MainPage = new Views.WelcomePage();
+            }
+            else
+            {
+                MainPage = new AppShell();
+            }
+
         }
     }
 }

@@ -7,7 +7,8 @@
     xmlns:model="clr-namespace:WeatherApp.Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewmodel="clr-namespace:WeatherApp.ViewModels"
-    x:DataType="viewmodel:WeatherPageViewModel">
+    x:DataType="viewmodel:WeatherPageViewModel"
+    Shell.NavBarIsVisible="false">
 
     <RefreshView
         Command="{Binding GetWeatherCommand}"

@@ -27,6 +27,7 @@ namespace WeatherApp
             builder.Services.AddSingleton<WeatherPageViewModel>();
             builder.Services.AddSingleton<FavoritesPageViewModel>();
 
+            builder.Services.AddSingleton<WelcomePage>();
             builder.Services.AddSingleton<WeatherPage>();
             builder.Services.AddSingleton<FavoritesPage>();
             
