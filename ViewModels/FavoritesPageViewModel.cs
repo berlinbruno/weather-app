@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace WeatherApp.ViewModels
+﻿namespace WeatherApp.ViewModels
 {
     public partial class FavoritesPageViewModel : BaseViewModel
     {
@@ -15,6 +13,9 @@ namespace WeatherApp.ViewModels
         }
 
         [ObservableProperty]
+        public WeatherModel weatherList = new();
+
+        [ObservableProperty]
         public List<Hour> forecastList = new();
 
         [ObservableProperty]
@@ -27,75 +28,87 @@ namespace WeatherApp.ViewModels
         [ObservableProperty]
         string query;
 
-        [ObservableProperty]
-        public WeatherModel favoriteList = new();
-
 
         [RelayCommand]
-        async Task Add()
+        async Task GetWeatherAsync()
         {
-
             if (IsBusy)
                 return;
 
             try
             {
-
                 IsBusy = true;
                 IsRefreshing = true;
 
+
+
                 //Check network connection.
-                if (connectivity.NetworkAccess != NetworkAccess.Internet)
-                    return;
-
-                Debug.WriteLine("a");
-
-                if (Query == null)
-                    return;
-
-               
-                    Debug.WriteLine("a1");
-                    Preferences.Clear("query");
-                    Debug.WriteLine("a2");
-                    Preferences.Set("query", Query);
-                    Items = Preferences.Get("query", null);
-             
-
-                Debug.WriteLine("b");
-
-                Query = String.Empty;
-
-                //Get Api response.
-                dynamic result = await apiServices.GetWeatherBylocation(Items);
-                FavoriteList = result;
-                Debug.WriteLine("c");
-
-                //Join Hours of 2 days from now.
-                var weatherForecastHours = new List<Hour>(FavoriteList.Forecast.Forecastday[0].Hour);
-                weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
-
-                //Find index of next Hour.
-                int nextIndexHour = int.Parse(FavoriteList.Location.NewLocalTime);
-                weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
-
-                //Get next 24 Hours from now.
-                ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
-
-                CurrentForecastList = weatherForecastHours[nextIndexHour];
-
-                if (FavoriteList.Current.IsDay == 0)
+                if (connectivity.NetworkAccess == NetworkAccess.Internet)
                 {
-                    IsDayOrNight = "n";
+
+                    string query = Query;
+
+                    if (query != null)
+                    {
+
+                        Preferences.Set("query", query);
+
+                        //Get Api response.
+                        dynamic result = await apiServices.GetWeatherBylocation(query);
+                        WeatherList = result;
+
+                        //Join Hours of 2 days from now.
+                        var weatherForecastHours = new List<Hour>(WeatherList.Forecast.Forecastday[0].Hour);
+                        weatherForecastHours.AddRange(new List<Hour>(WeatherList.Forecast.Forecastday[1].Hour));
+
+                        //Find index of next Hour.
+                        int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                        weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
+
+                        //Get next 24 Hours from now.
+                        ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
+
+                        CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+                        if (CurrentForecastList.IsDay == 0)
+                        {
+                            IsDayOrNight = "n";
+                        }
+                        else
+                        {
+                            IsDayOrNight = "d";
+                        }
+
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Invalid Query");
+                        return;
+                    }
+
                 }
                 else
                 {
-                    IsDayOrNight = "d";
+                    await Toast.Make("No Internet", CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine("No Internet");
+                    return;
                 }
 
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
+                if (ex.Message.Contains("400"))
+                {
+                    await Toast.Make("Invalid City Name", CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+
+                }
+                else
+                {
+                    await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+                }
+
             }
             finally
             {
@@ -111,51 +124,72 @@ namespace WeatherApp.ViewModels
             if (IsBusy)
                 return;
 
+            IsBusy = true;
+            IsRefreshing = true;
+
             try
             {
-                if (connectivity.NetworkAccess != NetworkAccess.Internet)
-                    return;
-
-                IsBusy = true;
-                IsRefreshing = true;
-
-                Items = Preferences.Get("query", null);
-
-                if (Items == null)
-                    return;
-
-                Query = String.Empty;
-
-                //Get Api response.
-                dynamic result = await apiServices.GetWeatherBylocation(Items);
-                FavoriteList = result;
-
-                //Join Hours of 2 days from now.
-                var weatherForecastHours = new List<Hour>(FavoriteList.Forecast.Forecastday[0].Hour);
-                weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
-
-                //Find index of next Hour.
-                int nextIndexHour = int.Parse(FavoriteList.Location.NewLocalTime);
-                weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
-
-                //Get next 24 Hours from now.
-                ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
-
-                CurrentForecastList = weatherForecastHours[nextIndexHour];
-
-                if (FavoriteList.Current.IsDay == 0)
+                //Check network connection.
+                if (connectivity.NetworkAccess == NetworkAccess.Internet)
                 {
-                    IsDayOrNight = "n";
+                    Items = Preferences.Get("query", null);
+
+                    if (Items != null)
+                    {
+                        Query = String.Empty;
+
+                        //Get Api response.
+                        dynamic result = await apiServices.GetWeatherBylocation(Items);
+                        WeatherList = result;
+
+                        //Join Hours of 2 days from now.
+                        var weatherForecastHours = new List<Hour>(WeatherList.Forecast.Forecastday[0].Hour);
+                        weatherForecastHours.AddRange(new List<Hour>(WeatherList.Forecast.Forecastday[1].Hour));
+
+                        //Find index of next Hour.
+                        int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                        weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
+
+                        //Get next 24 Hours from now.
+                        ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
+
+                        CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+                        if (CurrentForecastList.IsDay == 0)
+                        {
+                            IsDayOrNight = "n";
+                        }
+                        else
+                        {
+                            IsDayOrNight = "d";
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Invalid Query");
+                        return;
+                    }
                 }
                 else
                 {
-                    IsDayOrNight = "d";
+                    await Toast.Make("No Internet", CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine("No Internet");
+                    return;
                 }
-
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
+                if (ex.Message.Contains("400"))
+                {
+                    await Toast.Make("Invalid City Name", CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+
+                }
+                else
+                {
+                    await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+                }
             }
             finally
             {
@@ -167,5 +201,5 @@ namespace WeatherApp.ViewModels
     }
 }
 
-        
+
 

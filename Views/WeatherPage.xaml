@@ -52,7 +52,7 @@
                             VerticalTextAlignment="Center" />
 
                         <Image
-                            Margin="0,60,0,20"
+                            Margin="0,80,0,35"
                             HeightRequest="128"
                             HorizontalOptions="Center"
                             VerticalOptions="Center"

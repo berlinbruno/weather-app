@@ -7,3 +7,6 @@ global using WeatherApp.Models;
 global using WeatherApp.ViewModels;
 global using WeatherApp.Views;
 global using WeatherApp.Services;
+global using CommunityToolkit.Maui.Alerts;
+global using System;
+global using System.Globalization;
