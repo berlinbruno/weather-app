@@ -12,6 +12,9 @@
         [ObservableProperty]
         bool isRefreshing;
 
+        [ObservableProperty]
+        string isDayOrNight;
+
         public bool IsNotBusy => !IsBusy;
 
     }
