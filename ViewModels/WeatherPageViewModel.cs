@@ -86,13 +86,22 @@ namespace WeatherApp.ViewModels
                 weatherForecastHours.AddRange(new List<Hour>(WeatherList.Forecast.Forecastday[1].Hour));
 
                 //Find index of next Hour.
-                int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                int nextIndexHour = int.Parse(WeatherList.Location.NewLocalTime);
                 weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
 
                 //Get next 24 Hours from now.
                 ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
 
                 CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+                if(WeatherList.Current.IsDay == 0)
+                {
+                    IsDayOrNight = "n";
+                }
+                else
+                {
+                    IsDayOrNight = "d";
+                }
 
             }
             catch (Exception ex)

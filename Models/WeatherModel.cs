@@ -24,6 +24,8 @@ namespace WeatherApp.Models
         public string Icon { get; set; }
 
         public string NewIcon => Icon.Replace("68x68","128x128");
+
+        public string NewIcon1 => Icon.Substring(Icon.Length - 7, 7);
     }
 
     public class Current
@@ -33,6 +35,9 @@ namespace WeatherApp.Models
 
         [JsonProperty("temp_f")]
         public double TempF { get; set; }
+
+        [JsonProperty("is_day")]
+        public int IsDay { get; set; }
 
         [JsonProperty("condition")]
         public Condition Condition { get; set; }
@@ -128,6 +133,8 @@ namespace WeatherApp.Models
 
         [JsonProperty("localtime")]
         public string Localtime { get; set; }
+
+        public string NewLocalTime => Localtime.Substring(Localtime.Length - 5, 2);
     }
 
     public class WeatherModel

@@ -75,13 +75,23 @@ namespace WeatherApp.ViewModels
                 weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
 
                 //Find index of next Hour.
-                int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                int nextIndexHour = int.Parse(FavoriteList.Location.NewLocalTime);
                 weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
 
                 //Get next 24 Hours from now.
                 ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
 
                 CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+                if (FavoriteList.Current.IsDay == 0)
+                {
+                    IsDayOrNight = "n";
+                }
+                else
+                {
+                    IsDayOrNight = "d";
+                }
+
             }
             catch (Exception ex)
             {
@@ -103,6 +113,12 @@ namespace WeatherApp.ViewModels
 
             try
             {
+                if (connectivity.NetworkAccess != NetworkAccess.Internet)
+                    return;
+
+                IsBusy = true;
+                IsRefreshing = true;
+
                 Items = Preferences.Get("query", null);
 
                 if (Items == null)
@@ -119,13 +135,22 @@ namespace WeatherApp.ViewModels
                 weatherForecastHours.AddRange(new List<Hour>(FavoriteList.Forecast.Forecastday[1].Hour));
 
                 //Find index of next Hour.
-                int nextIndexHour = int.Parse(DateTime.Now.ToString("HH", CultureInfo.CurrentCulture));
+                int nextIndexHour = int.Parse(FavoriteList.Location.NewLocalTime);
                 weatherForecastHours.ForEach(x => x.Time = x.Time[11..]);
 
                 //Get next 24 Hours from now.
                 ForecastList = weatherForecastHours.GetRange(nextIndexHour + 1, 12);
 
                 CurrentForecastList = weatherForecastHours[nextIndexHour];
+
+                if (FavoriteList.Current.IsDay == 0)
+                {
+                    IsDayOrNight = "n";
+                }
+                else
+                {
+                    IsDayOrNight = "d";
+                }
 
             }
             catch (Exception ex)

@@ -51,13 +51,18 @@
                             VerticalTextAlignment="Center" />
 
                         <Image
-                            Margin="0,60,0,0"
-                            Aspect="AspectFill"
-                            HeightRequest="150"
+                            Margin="0,60,0,20"
+                            HeightRequest="128"
                             HorizontalOptions="Center"
-                            Source="{Binding CurrentForecastList.Condition.NewIcon, StringFormat='{}https:{0}'}"
                             VerticalOptions="Center"
-                            WidthRequest="150" />
+                            WidthRequest="128">
+                            <Image.Source>
+                                <MultiBinding StringFormat="{}{0}{1}">
+                                    <Binding Path="IsDayOrNight" />
+                                    <Binding Path="CurrentForecastList.Condition.NewIcon1" />
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
 
                         <Grid Margin="10,0,10,0" ColumnDefinitions="*,*,*,*,*">
                             <Entry
@@ -67,7 +72,7 @@
                                 Placeholder="Enter The City"
                                 PlaceholderColor="{AppThemeBinding Dark=White,
                                                                    Light=Grey}"
-                                Text="{Binding Query}"/>
+                                Text="{Binding Query}" />
 
 
                             <Button
