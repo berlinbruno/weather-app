@@ -12,10 +12,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>WeatherApp</ApplicationTitle>
+		<ApplicationTitle>Weather</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.weatherapp</ApplicationId>
+		<ApplicationId>com.berlinbruno.weather</ApplicationId>
 		<ApplicationIdGuid>10b45460-eba7-4ee6-b34a-4adf83e3ae6a</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -71,6 +71,14 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>key.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>berlintheboss</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>weather</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>berlintheboss</AndroidSigningKeyPass>
+  </PropertyGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionWeatherAppHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 </Project>
