@@ -92,8 +92,17 @@ namespace WeatherApp.ViewModels
             }
             catch (Exception ex)
             {
-                await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
-                Debug.WriteLine(ex.Message);
+                if (ex.Message.Contains("400"))
+                {
+                    await Toast.Make("Invalid City Name", CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+
+                }
+                else
+                {
+                    await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long, 14).Show();
+                    Debug.WriteLine(ex.Message);
+                }
             }
             finally
             {
@@ -119,11 +128,14 @@ namespace WeatherApp.ViewModels
                     IsFirstTime = false;
 
                     if (location == null)
+                    {
                         location = await geolocation.GetLocationAsync(new GeolocationRequest
                         {
                             DesiredAccuracy = GeolocationAccuracy.Medium,
                             Timeout = TimeSpan.FromSeconds(10)
                         });
+                    }
+
 
                     latitude = location.Latitude;
                     longitude = location.Longitude;
@@ -138,6 +150,7 @@ namespace WeatherApp.ViewModels
                         DesiredAccuracy = GeolocationAccuracy.Medium,
                         Timeout = TimeSpan.FromSeconds(10)
                     });
+
                     latitude = location.Latitude;
                     longitude = location.Longitude;
                     query = string.Format("{0},{1}", location.Latitude, location.Longitude);

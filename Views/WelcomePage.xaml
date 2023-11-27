@@ -28,7 +28,7 @@
 
         <Label
             FontSize="Medium"
-            Text="Developed by Berlin"
+            Text="Developed by Berlin Bruno"
             TextColor="GhostWhite" />
         <Button
             x:Name="GetStartedButton"

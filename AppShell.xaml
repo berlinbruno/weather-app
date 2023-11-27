@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:view="clr-namespace:WeatherApp.Views"
-    Shell.NavBarIsVisible="false"
     Shell.FlyoutBehavior="Disabled"
     Shell.TabBarBackgroundColor="{AppThemeBinding Dark=#001d3d, Light=#003566}"
     Shell.TabBarIsVisible="True"

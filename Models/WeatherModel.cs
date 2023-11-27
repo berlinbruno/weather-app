@@ -23,9 +23,7 @@ namespace WeatherApp.Models
         [JsonProperty("icon")]
         public string Icon { get; set; }
 
-        public string NewIcon => Icon.Replace("68x68","128x128");
-
-        public string NewIcon1 => Icon.Substring(Icon.Length - 7, 7);
+        public string NewIcon => Icon.Substring(Icon.Length - 7, 7);
     }
 
     public class Current
