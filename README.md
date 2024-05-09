@@ -1,6 +1,6 @@
 # Weather - Real-time Weather Information App
 
-WeatherNow is an Android application built using C#, .NET MAUI, and the WeatherAPI to deliver users real-time weather updates for their current and saved locations. With features like current weather visualization and forecasts, users can stay informed about weather conditions anytime, anywhere.
+Weather is an Android application built using C#, .NET MAUI, and the WeatherAPI to deliver users real-time weather updates for their current and saved locations. With features like current weather visualization and forecasts, users can stay informed about weather conditions anytime, anywhere.
 
 ## Key Features
 
