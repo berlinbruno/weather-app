@@ -29,3 +29,7 @@ WeatherNow is an Android application built using C#, .NET MAUI, and the WeatherA
 ## Acknowledgements
 
 Special thanks to the developers of .NET MAUI and WeatherAPI for their invaluable contributions to this project.
+
+## License
+
+Feel free to use this project as you wish. No restrictions apply.
